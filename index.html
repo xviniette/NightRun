@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <title>NightRun</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
+    </head>
+    <body>
+        <div id="app" class="container mx-auto">
+            <h1 class="text-center text-4xl mb-5">NightRun Image</h1>
+
+            <div class="flex">
+                <div class="flex flex-col gap-4">
+                    <div v-for="(attributeName, attr) in {image:'Image', nb:'Numéro', rdv:'RDV', distance:'Distance', location:'Direction'}">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{attributeName}}</label>
+                        <textarea
+                            v-model="data[attr]"
+                            rows="2"
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Write your thoughts here..."
+                        ></textarea>
+                    </div>
+
+                    <button
+                        @click="screenshot"
+                        type="button"
+                        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                    >
+                        Télécharger
+                    </button>
+                </div>
+                <div id="render">
+                    <div class="relative w-[1200px] h-[630px] bg-cover bg-center" :class="'bg-[url(\''+ data.image +'\')]'">
+                        <div class="absolute bottom-5 left-5 text-4xl text-red-600 font-semibold uppercase drop-shadow-lg">{{data.rdv}}</div>
+                        <div class="absolute left-10 top-10 -rotate-[10deg] flex flex-col items-center justify-center gap-2">
+                            <div class="text-red-600 text-4xl">NightRun</div>
+                            <div class="text-white bg-red-600 px-10 py-5 text-3xl font-semibold">{{data.nb}}</div>
+                        </div>
+
+                        <div
+                            class="absolute right-5 top-5 w-60 aspect-square rounded-full bg-red-600/50 flex flex-col justify-center items-center rotate-[20deg] text-white"
+                        >
+                            <div class="w-full text-center text-3xl">{{data.distance}}</div>
+                            <div class="w-full text-center text-3xl">{{data.location}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            new Vue({
+                el: "#app",
+                data: {
+                    data: {
+                        rdv: "RDV 19h15 devant l'office de tourisme",
+                        nb: "#764",
+                        distance: "5&7kms",
+                        location: "Parc Méric",
+                        image: "https://scontent-mrs2-2.xx.fbcdn.net/v/t39.30808-6/337697515_6007725255962270_3105285649272896230_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=-lyeM4ZvjhIAX_vkUpN&_nc_ht=scontent-mrs2-2.xx&oh=00_AfDFKUeccBfIxAvktWcsNyKUFv9QO_IC-m4eoY2CEdDi-w&oe=64282130",
+                    },
+                },
+                methods: {
+                    screenshot() {
+                        html2canvas(document.querySelector("#render"), {
+                            useCORS: true,
+                            allowTaint: true,
+                        }).then(canvas => {
+                            canvas.toBlob(blob => {
+                                const link = document.createElement("a")
+                                link.href = URL.createObjectURL(blob)
+                                link.download = "NightRun-" + this.data.nb
+                                document.body.appendChild(link)
+                                link.click()
+                                document.body.removeChild(link)
+                            })
+                        })
+                    },
+                },
+            })
+        </script>
+    </body>
+</html>
