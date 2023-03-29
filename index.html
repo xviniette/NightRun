@@ -7,66 +7,73 @@
         <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
     </head>
     <body class="bg-slate-50">
-        <div id="app" class="container mx-auto">
-            <h1 class="text-center text-4xl font-bold text-gray-900 mb-4">NightRun Post</h1>
-            <div class="flex flex-col lg:flex-inline gap-4">
-                <div class="grid grid-cols-2 gap-2">
-                    <div
-                        v-for="(attributeName, attr) in {image:'Image (copier l\'url depuis fb)', nb:'Numéro', rdv:'RDV', location:'Direction', petit:'Distance 9km/h', long:'Distance 11km/h' }"
-                    >
-                        <label class="block mb-2 text-sm font-medium text-gray-900">{{attributeName}}</label>
-                        <input v-model="data[attr]" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" />
-                    </div>
-
-                    <div class="flex items-center" v-for="(attributeName, attr) in {fractionne:'Fractionné', frontale:'Frontale', eau:'Eau' }">
-                        <input
-                            :id="attr"
-                            v-model="data[attr]"
-                            type="checkbox"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                        <label :for="attr" class="ml-2 text-sm font-medium text-gray-900">{{attributeName}}</label>
-                    </div>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-2">
-                    <div>
+        <div id="app">
+            <div class="container mx-auto">
+                <h1 class="text-center text-4xl font-bold text-gray-900 mb-4">NightRun Post</h1>
+                <div class="flex flex-col lg:flex-inline gap-4">
+                    <div class="grid grid-cols-2 gap-2">
                         <div
-                            @click="copyClipboard"
-                            class="whitespace-break-spaces cursor-pointer block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
+                            v-for="(attributeName, attr) in {image:'Image (copier l\'url depuis fb)', nb:'Numéro', rdv:'RDV', location:'Direction', petit:'Distance 9km/h', long:'Distance 11km/h' }"
                         >
-                            {{text}}
+                            <label class="block mb-2 text-sm font-medium text-gray-900">{{attributeName}}</label>
+                            <input
+                                v-model="data[attr]"
+                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                            />
                         </div>
-                        <button
-                            @click="copyClipboard"
-                            type="button"
-                            class="w-full mt-2 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
-                        >
-                            Copier texte
-                        </button>
+
+                        <div class="flex items-center" v-for="(attributeName, attr) in {fractionne:'Fractionné', frontale:'Frontale', eau:'Eau' }">
+                            <input
+                                :id="attr"
+                                v-model="data[attr]"
+                                type="checkbox"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                            />
+                            <label :for="attr" class="ml-2 text-sm font-medium text-gray-900">{{attributeName}}</label>
+                        </div>
                     </div>
 
-                    <div>
-                        <img ref="image" @click="copyImage" class="cursor-pointer rounded-lg shadow-lg object-fit hover:brightness-90" />
-                        <button
-                            @click="copyImage"
-                            type="button"
-                            class="w-full mt-2 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
-                        >
-                            Copier image
-                        </button>
-                        <button
-                            @click="screenshot"
-                            type="button"
-                            class="w-full mt-2 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
-                        >
-                            Télécharger
-                        </button>
-                    </div>
-                </div>
+                    <div class="grid md:grid-cols-2 gap-2">
+                        <div>
+                            <div
+                                @click="copyClipboard"
+                                class="cursor-pointer overflow-hidden p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
+                            >
+                                <pre class="font-sans">{{text}}</pre>
+                            </div>
+                            <button
+                                @click="copyClipboard"
+                                type="button"
+                                class="w-full mt-2 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                            >
+                                Copier texte
+                            </button>
+                        </div>
 
-                <div class="text-center">
-                    <a class="font-medium text-blue-600 hover:underline" href="https://www.facebook.com/NightRunMontpellier">NightRun Montpellier</a>
+                        <div>
+                            <img ref="image" @click="copyImage" class="cursor-pointer rounded-lg shadow-lg object-fit hover:brightness-90" />
+                            <button
+                                @click="copyImage"
+                                type="button"
+                                class="w-full mt-2 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                            >
+                                Copier image
+                            </button>
+                            <button
+                                @click="screenshot"
+                                type="button"
+                                class="w-full mt-2 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                            >
+                                Télécharger
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <a class="font-medium text-blue-600 hover:underline" href="https://www.facebook.com/NightRunMontpellier"
+                            >NightRun Montpellier</a
+                        >
+                    </div>
                 </div>
             </div>
 
@@ -90,7 +97,7 @@
             </div>
 
             <div v-if="copy" class="fixed w-full bottom-5 flex justify-center">
-                <div class="px-10 py-2 flex bg-blue-500 text-white rounded-lg">
+                <div class="px-10 text-center py-2 flex bg-blue-500 text-white rounded-lg">
                     Copié ! Collez sur le post FB
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path
@@ -174,13 +181,13 @@
                     text() {
                         return `Bonjour à toutes et tous,\nCe soir ce sera la sortie #${this.data.nb} 😀\n🏁 Nous vous donnons rendez vous à ${
                             this.data.rdv
-                        }\n\nNous irons en direction de ${this.data.location}\n${
+                        }\n\nNous irons en direction de ${this.data.location}\n\nAu programme ce soir :\n${
                             this.data.petit.length > 0 ? `📍${this.data.fractionne ? "Footing" : "Un run"} de ${this.data.petit}km à 9km/h 🏃‍♀️\n` : ""
                         }${this.data.long.length > 0 ? `📍${this.data.fractionne ? "Footing" : "Un run"} de ${this.data.long}km à 11km/h 🏃‍♀️\n` : ""}${
-                            this.data.frontale ? "\nPensez à prendre votre frontale🔦🔦\n" : ""
-                        }${
-                            this.data.eau ? "\nPensez à prendre de l'eau 💧\n" : ""
-                        }\nÀ ce soir,\nL'équipe NightRun Montpellier\n#nightrun #montpellier #running`
+                            this.data.fractionne ? "Suivi d'une séance de fractionné\n" : ""
+                        }\n${this.data.frontale ? "Pensez à prendre votre frontale🔦🔦\n" : ""}${
+                            this.data.eau ? "Pensez à prendre de l'eau 💧\n" : ""
+                        }À ce soir,\nL'équipe NightRun Montpellier\n#nightrun #montpellier #running`
                     },
                 },
                 mounted() {
