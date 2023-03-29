@@ -8,10 +8,11 @@
     </head>
     <body class="bg-slate-50">
         <div id="app" class="container mx-auto">
+            <h1 class="text-center text-4xl font-bold text-gray-900 mb-4">NightRun Post</h1>
             <div class="flex flex-col lg:flex-inline gap-4">
-                <div class="flex flex-col gap-2">
+                <div class="grid grid-cols-2 gap-2">
                     <div
-                        v-for="(attributeName, attr) in {image:'Image', nb:'Numéro', rdv:'RDV', location:'Direction', petit:'9km/h', long:'11km/h' }"
+                        v-for="(attributeName, attr) in {image:'Image (copier l\'url depuis fb)', nb:'Numéro', rdv:'RDV', location:'Direction', petit:'Distance 9km/h', long:'Distance 11km/h' }"
                     >
                         <label class="block mb-2 text-sm font-medium text-gray-900">{{attributeName}}</label>
                         <input v-model="data[attr]" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" />
@@ -28,7 +29,7 @@
                     </div>
                 </div>
 
-                <div class="md:inline-flex gap-2">
+                <div class="grid md:grid-cols-2 gap-2">
                     <div
                         @click="copyClipboard"
                         class="whitespace-break-spaces cursor-pointer block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
@@ -47,6 +48,10 @@
                         </button>
                     </div>
                 </div>
+
+                <div class="text-center">
+                    <a class="font-medium text-blue-600 hover:underline" href="https://www.facebook.com/NightRunMontpellier">NightRun Montpellier</a>
+                </div>
             </div>
 
             <!-- RENDER -->
@@ -61,9 +66,9 @@
                 </div>
 
                 <div
-                    class="absolute right-5 top-5 p-10 max-w-[18rem] aspect-square rounded-full bg-red-600/80 flex flex-col justify-center items-center rotate-[20deg] text-white"
+                    class="absolute right-5 top-5 p-5 max-w-[18rem] aspect-square rounded-full bg-red-600/80 flex flex-col justify-center items-center rotate-[20deg] text-white"
                 >
-                    <div class="text-center text-4xl font-bold uppercase -translate-y-3">{{distances}}</div>
+                    <div class="text-center text-3xl font-bold uppercase -translate-y-3">{{distances}}</div>
                     <div class="text-center text-2xl font-light uppercase -translate-y-2 font-serif">{{data.location}}</div>
                 </div>
             </div>
