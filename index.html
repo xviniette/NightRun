@@ -1,52 +1,64 @@
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>NightRun</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk/debug.js"></script>
     </head>
     <body>
         <div id="app" class="container mx-auto">
-            <h1 class="text-center text-4xl mb-5">NightRun Image</h1>
-
-            <div class="flex">
+            <div class="flex flex-col lg:flex-inline gap-4">
                 <div class="flex flex-col gap-4">
-                    <div v-for="(attributeName, attr) in {image:'Image', nb:'Numéro', rdv:'RDV', distance:'Distance', location:'Direction'}">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{attributeName}}</label>
+                    <div v-for="(attributeName, attr) in {image:'Image', nb:'Numéro', rdv:'RDV', petit:'9km/h', long:'11km/h', location:'Direction'}">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">{{attributeName}}</label>
                         <textarea
                             v-model="data[attr]"
-                            rows="2"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Write your thoughts here..."
+                            rows="1"
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
                         ></textarea>
                     </div>
 
                     <button
                         @click="screenshot"
                         type="button"
-                        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
                     >
-                        Télécharger
+                        Télécharger image
                     </button>
                 </div>
-                <div id="render">
-                    <div class="relative w-[1200px] h-[630px] bg-cover bg-center" :class="'bg-[url(\''+ data.image +'\')]'">
+
+                <textarea rows="10" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300">{{text}}</textarea>
+
+                <div class="overflow-hidden select-none">
+                    <div id="render" class="relative w-[1200px] h-[630px] bg-cover bg-center" :class="'bg-[url(\''+ data.image +'\')]'">
                         <div class="absolute bottom-5 left-5 text-4xl text-red-600 font-semibold uppercase drop-shadow-lg">{{data.rdv}}</div>
                         <div class="absolute left-10 top-10 -rotate-[10deg] flex flex-col items-center justify-center gap-2">
                             <div class="text-red-600 text-4xl">NightRun</div>
-                            <div class="text-white bg-red-600 px-10 py-5 text-3xl font-semibold">{{data.nb}}</div>
+                            <div class="text-white bg-red-600/75 rounded-lg px-5 py-5 text-3xl font-semibold">{{data.nb}}</div>
                         </div>
 
                         <div
-                            class="absolute right-5 top-5 w-60 aspect-square rounded-full bg-red-600/50 flex flex-col justify-center items-center rotate-[20deg] text-white"
+                            class="absolute right-5 top-5 w-60 aspect-square rounded-full bg-red-600/75 flex flex-col justify-center items-center rotate-[20deg] text-white"
                         >
-                            <div class="w-full text-center text-3xl">{{data.distance}}</div>
-                            <div class="w-full text-center text-3xl">{{data.location}}</div>
+                            <div class="w-full text-center text-3xl uppercase">{{distances.join("&")}}km</div>
+                            <div class="w-full text-center text-3xl uppercase">{{data.location}}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            window.fbAsyncInit = function () {
+                FB.init({
+                    appId: "926451958596610",
+                    autoLogAppEvents: true,
+                    xfbml: true,
+                    version: "v16.0",
+                })
+            }
+        </script>
         <script>
             new Vue({
                 el: "#app",
@@ -54,13 +66,27 @@
                     data: {
                         rdv: "RDV 19h15 devant l'office de tourisme",
                         nb: "#764",
-                        distance: "5&7kms",
+                        petit: "5",
+                        long: "7",
                         location: "Parc Méric",
                         image: "https://scontent-mrs2-2.xx.fbcdn.net/v/t39.30808-6/337697515_6007725255962270_3105285649272896230_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=-lyeM4ZvjhIAX_vkUpN&_nc_ht=scontent-mrs2-2.xx&oh=00_AfDFKUeccBfIxAvktWcsNyKUFv9QO_IC-m4eoY2CEdDi-w&oe=64282130",
                     },
                 },
                 methods: {
                     screenshot() {
+                        // FB.login(function (response) {
+                        //     if (response.authResponse) {
+                        //         console.log("Welcome!  Fetching your information.... ")
+                        //         FB.api("/me", function (response) {
+                        //             console.log("Good to see you, " + response.name + ".")
+                        //         })
+                        //     } else {
+                        //         console.log("User cancelled login or did not fully authorize.")
+                        //     }
+                        // })
+
+                        // return
+
                         html2canvas(document.querySelector("#render"), {
                             useCORS: true,
                             allowTaint: true,
@@ -74,6 +100,29 @@
                                 document.body.removeChild(link)
                             })
                         })
+                    },
+                },
+                computed: {
+                    distances() {
+                        const d = []
+                        if (this.data.petit > 0) d.push(this.data.petit)
+                        if (this.data.long > 0) d.push(this.data.long)
+
+                        return d
+                    },
+                    text() {
+                        return `Bonjour à toutes et tous,
+Ce soir ce sera la sortie ${this.data.nb} 😀
+
+🏁 Nous vous donnons rendez vous à ${this.data.rdv} 
+
+Nous irons en direction de ${this.data.location}
+${this.data.petit.length > 0 ? `📍footing ${this.data.petit}km à 9km/h 🏃‍♀️\n` : ""}${
+                            this.data.long.length > 0 ? `📍footing ${this.data.long}km à 11km/h 🏃‍♀️\n` : ""
+                        }
+À ce soir,
+L'équipe Nightrun Montpellier
+#nightrun #montpellier #running`
                     },
                 },
             })
