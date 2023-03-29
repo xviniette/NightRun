@@ -5,13 +5,14 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
-        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk/debug.js"></script>
     </head>
     <body>
         <div id="app" class="container mx-auto">
             <div class="flex flex-col lg:flex-inline gap-4">
                 <div class="flex flex-col gap-4">
-                    <div v-for="(attributeName, attr) in {image:'Image', nb:'Numéro', rdv:'RDV', petit:'9km/h', long:'11km/h', location:'Direction'}">
+                    <div
+                        v-for="(attributeName, attr) in {image:'Image', nb:'Numéro', rdv:'RDV', location:'Direction', petit:'9km/h', long:'11km/h' }"
+                    >
                         <label class="block mb-2 text-sm font-medium text-gray-900">{{attributeName}}</label>
                         <textarea
                             v-model="data[attr]"
@@ -19,75 +20,74 @@
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
                         ></textarea>
                     </div>
-
-                    <button
-                        @click="screenshot"
-                        type="button"
-                        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
-                    >
-                        Télécharger image
-                    </button>
                 </div>
 
-                <textarea rows="10" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300">{{text}}</textarea>
+                <div class="flex flex-col gap-2">
+                    <div
+                        @click="copyClipboard"
+                        class="whitespace-break-spaces cursor-pointer block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                    >
+                        {{text}}
+                    </div>
 
-                <div class="overflow-hidden select-none">
-                    <div id="render" class="relative w-[1200px] h-[630px] bg-cover bg-center" :class="'bg-[url(\''+ data.image +'\')]'">
-                        <div class="absolute bottom-5 left-5 text-4xl text-red-600 font-semibold uppercase drop-shadow-lg">{{data.rdv}}</div>
-                        <div class="absolute left-10 top-10 -rotate-[10deg] flex flex-col items-center justify-center gap-2">
-                            <div class="text-red-600 text-4xl">NightRun</div>
-                            <div class="text-white bg-red-600/75 rounded-lg px-5 py-5 text-3xl font-semibold">{{data.nb}}</div>
-                        </div>
-
-                        <div
-                            class="absolute right-5 top-5 w-60 aspect-square rounded-full bg-red-600/75 flex flex-col justify-center items-center rotate-[20deg] text-white"
+                    <div>
+                        <img ref="image" class="rounded shadow object-fit mb-2 hover:saturate-150" />
+                        <button
+                            @click="screenshot"
+                            type="button"
+                            class="w-full text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
                         >
-                            <div class="w-full text-center text-3xl uppercase">{{distances.join("&")}}km</div>
-                            <div class="w-full text-center text-3xl uppercase">{{data.location}}</div>
-                        </div>
+                            Télécharger image
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <!-- RENDER -->
+            <div id="render" class="hidden relative w-[1200px] h-[630px] bg-cover bg-center" :class="'bg-[url(\''+ data.image +'\')]'">
+                <div class="absolute bottom-5 left-5 text-4xl text-red-600 font-semibold uppercase drop-shadow-lg">RDV {{data.rdv}}</div>
+                <div class="absolute left-10 top-10 -rotate-[10deg] flex flex-col items-center justify-center gap-2">
+                    <div class="text-red-600 text-4xl">NightRun</div>
+                    <div class="text-white bg-red-600/75 rounded-lg px-5 py-5 text-3xl font-semibold">#{{data.nb}}</div>
+                </div>
+
+                <div
+                    class="absolute right-5 top-5 w-60 aspect-square rounded-full bg-red-600/75 flex flex-col justify-center items-center rotate-[20deg] text-white"
+                >
+                    <div class="w-full text-center text-3xl uppercase">{{distances.join("&")}}km</div>
+                    <div class="w-full text-center text-3xl uppercase">{{data.location}}</div>
+                </div>
+            </div>
         </div>
-        <script>
-            window.fbAsyncInit = function () {
-                FB.init({
-                    appId: "926451958596610",
-                    autoLogAppEvents: true,
-                    xfbml: true,
-                    version: "v16.0",
-                })
-            }
-        </script>
+
         <script>
             new Vue({
                 el: "#app",
                 data: {
                     data: {
-                        rdv: "RDV 19h15 devant l'office de tourisme",
-                        nb: "#764",
-                        petit: "5",
-                        long: "7",
+                        rdv: "19h15 devant l'office de tourisme",
+                        nb: "1",
+                        petit: new Date().getDay() == 4 ? 9 : 5,
+                        long: new Date().getDay() == 4 ? 11 : 7,
                         location: "Parc Méric",
                         image: "https://scontent-mrs2-2.xx.fbcdn.net/v/t39.30808-6/337697515_6007725255962270_3105285649272896230_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=-lyeM4ZvjhIAX_vkUpN&_nc_ht=scontent-mrs2-2.xx&oh=00_AfDFKUeccBfIxAvktWcsNyKUFv9QO_IC-m4eoY2CEdDi-w&oe=64282130",
                     },
                 },
                 methods: {
+                    copyClipboard() {
+                        navigator.clipboard.writeText(this.text).then(
+                            () => {},
+                            () => {}
+                        )
+                    },
+                    copyImage() {
+                        // navigator.clipboard.write({new ClipboardItem({})}).then(() => {})
+                    },
                     screenshot() {
-                        // FB.login(function (response) {
-                        //     if (response.authResponse) {
-                        //         console.log("Welcome!  Fetching your information.... ")
-                        //         FB.api("/me", function (response) {
-                        //             console.log("Good to see you, " + response.name + ".")
-                        //         })
-                        //     } else {
-                        //         console.log("User cancelled login or did not fully authorize.")
-                        //     }
-                        // })
-
-                        // return
-
                         html2canvas(document.querySelector("#render"), {
+                            onclone(clonedDoc) {
+                                clonedDoc.querySelector("#render").style.display = "block"
+                            },
                             useCORS: true,
                             allowTaint: true,
                         }).then(canvas => {
@@ -111,18 +111,38 @@
                         return d
                     },
                     text() {
-                        return `Bonjour à toutes et tous,
-Ce soir ce sera la sortie ${this.data.nb} 😀
-
-🏁 Nous vous donnons rendez vous à ${this.data.rdv} 
-
-Nous irons en direction de ${this.data.location}
-${this.data.petit.length > 0 ? `📍footing ${this.data.petit}km à 9km/h 🏃‍♀️\n` : ""}${
+                        return `Bonjour à toutes et tous,\nCe soir ce sera la sortie #${this.data.nb} 😀\n🏁 Nous vous donnons rendez vous à ${
+                            this.data.rdv
+                        }\n\nNous irons en direction de ${this.data.location}\n${
+                            this.data.petit.length > 0 ? `📍footing ${this.data.petit}km à 9km/h 🏃‍♀️\n` : ""
+                        }${
                             this.data.long.length > 0 ? `📍footing ${this.data.long}km à 11km/h 🏃‍♀️\n` : ""
-                        }
-À ce soir,
-L'équipe Nightrun Montpellier
-#nightrun #montpellier #running`
+                        }\nÀ ce soir,\nL'équipe NightRun Montpellier\n#nightrun #montpellier #running`
+                    },
+                    render() {
+                        html2canvas(document.querySelector("#render"), {
+                            onclone(clonedDoc) {
+                                clonedDoc.querySelector("#render").style.display = "block"
+                            },
+                            useCORS: true,
+                            allowTaint: true,
+                        }).then(canvas => {
+                            canvas.toBlob(blob => (this.$refs.image.src = URL.createObjectURL(blob)))
+                        })
+                    },
+                },
+                mounted() {
+                    setTimeout(() => {
+                        this.render()
+                    }, 100)
+                },
+                watch: {
+                    data: {
+                        handler() {
+                            this.render()
+                            // setTimeout(() => {}, 10)
+                        },
+                        deep: true,
                     },
                 },
             })
