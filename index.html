@@ -6,7 +6,7 @@
         <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14"></script>
     </head>
-    <body>
+    <body class="bg-slate-50">
         <div id="app" class="container mx-auto">
             <div class="flex flex-col lg:flex-inline gap-4">
                 <div class="flex flex-col gap-2">
@@ -17,41 +17,21 @@
                         <input v-model="data[attr]" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" />
                     </div>
 
-                    <div class="flex items-center">
+                    <div class="flex items-center" v-for="(attributeName, attr) in {fractionne:'Fractionné', frontale:'Frontale', eau:'Eau' }">
                         <input
-                            id="fractionne"
-                            v-model="data.fractionne"
+                            :id="attr"
+                            v-model="data[attr]"
                             type="checkbox"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                         />
-                        <label for="fractionne" class="ml-2 text-sm font-medium text-gray-900">Fractionné</label>
-                    </div>
-
-                    <div class="flex items-center">
-                        <input
-                            id="frontale"
-                            v-model="data.frontale"
-                            type="checkbox"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                        <label for="frontale" class="ml-2 text-sm font-medium text-gray-900">Frontale</label>
-                    </div>
-
-                    <div class="flex items-center">
-                        <input
-                            id="eau"
-                            v-model="data.eau"
-                            type="checkbox"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                        />
-                        <label for="eau" class="ml-2 text-sm font-medium text-gray-900">Eau</label>
+                        <label :for="attr" class="ml-2 text-sm font-medium text-gray-900">{{attributeName}}</label>
                     </div>
                 </div>
 
                 <div class="md:inline-flex gap-2">
                     <div
                         @click="copyClipboard"
-                        class="whitespace-break-spaces cursor-pointer block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                        class="whitespace-break-spaces cursor-pointer block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
                     >
                         {{text}}
                     </div>
@@ -73,15 +53,15 @@
             <div id="render" class="hidden relative w-[1200px] h-[630px]">
                 <div class="w-full h-full bg-cover bg-center scale-110" :class="'bg-[url(\''+ data.image +'\')]'"></div>
                 <div class="absolute bottom-5 left-5 text-4xl text-red-600 font-semibold uppercase">RDV {{data.rdv}}</div>
-                <div class="absolute left-10 top-10 -rotate-[15deg] flex flex-col items-center justify-center gap-2">
-                    <div class="text-red-600 text-4xl font-bold font-serif">NightRun</div>
-                    <div class="mt-5 text-white bg-red-600/75 rounded-lg px-10 py-2 text-3xl font-black">
+                <div class="absolute left-5 top-5 -rotate-[15deg] flex flex-col items-center justify-center gap-2">
+                    <div class="text-red-600 text-6xl font-bold font-serif">NightRun</div>
+                    <div class="mt-10 text-white bg-red-600/80 rounded-xl px-10 py-2 text-3xl font-black">
                         <div class="-translate-y-3">#{{data.nb}}</div>
                     </div>
                 </div>
 
                 <div
-                    class="absolute right-5 top-5 p-10 max-w-[18rem] aspect-square rounded-full bg-red-600/75 flex flex-col justify-center items-center rotate-[20deg] text-white"
+                    class="absolute right-5 top-5 p-10 max-w-[18rem] aspect-square rounded-full bg-red-600/80 flex flex-col justify-center items-center rotate-[20deg] text-white"
                 >
                     <div class="text-center text-4xl font-bold uppercase -translate-y-3">{{distances}}</div>
                     <div class="text-center text-2xl font-light uppercase -translate-y-2 font-serif">{{data.location}}</div>
