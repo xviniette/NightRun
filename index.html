@@ -109,7 +109,7 @@
 
             <!-- RENDER -->
             <div id="render" class="hidden relative w-[1200px] h-[630px]">
-                <div class="w-full h-full bg-cover bg-center scale-110" :class="'bg-[url(\''+ imageURL +'\')]'"></div>
+                <div class="w-full h-full bg-cover bg-center scale-110" :class="'bg-[url(\''+ data.image +'\')]'"></div>
                 <div class="absolute bottom-5 left-5 text-4xl text-red-600 font-semibold uppercase">RDV {{data.rdv}}</div>
                 <div class="absolute left-5 top-5 -rotate-[15deg] flex flex-col items-center justify-center gap-2">
                     <div class="text-red-600 text-6xl font-bold font-serif">NightRun</div>
@@ -154,7 +154,6 @@
                         long: new Date().getDay() == 4 ? "11" : "7",
                         location: "Parc Méric",
                         image: "https://media.istockphoto.com/id/1154557075/fr/photo/grand-groupe-de-gens-athl%C3%A9tiques-heureux-traversant-la-nature.jpg?s=170667a&w=0&k=20&c=I4uorxONGFZ7KlXIizBuUL2eTTRmZ6w3EjS8l_S4hw8=",
-                        imgFile: null,
                     },
                     blob: null,
                     timeout: null,
@@ -203,7 +202,7 @@
                     changeImage(e) {
                         const file = e.target.files[0]
                         if (!file) return
-                        this.$set(this.data, "imgFile", URL.createObjectURL(file))
+                        this.$set(this.data, "image", URL.createObjectURL(file))
                     },
                 },
                 computed: {
@@ -227,10 +226,6 @@
                     },
                     htmlText() {
                         return this.text.replaceAll("\n", "<br/>")
-                    },
-                    imageURL() {
-                        if (this.data.imgFile) return this.data.imgFile
-                        if (this.data.image) return this.data.image
                     },
                 },
                 mounted() {
