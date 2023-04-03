@@ -8,12 +8,42 @@
     </head>
     <body class="bg-slate-50">
         <div id="app">
-            <div class="container mx-auto">
+            <div class="">
                 <h1 class="text-center text-4xl font-bold text-gray-900 mb-4">NightRun Post</h1>
                 <div class="flex flex-col lg:flex-inline gap-4">
                     <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900">Image</label>
+                            <div class="flex gap-2">
+                                <input
+                                    v-model="data.image"
+                                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300"
+                                />
+                                <label
+                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-6 h-6"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                                        />
+                                    </svg>
+
+                                    <input class="hidden" type="file" accept="image/*" @change="changeImage" />
+                                </label>
+                            </div>
+                        </div>
+
                         <div
-                            v-for="(attributeName, attr) in {image:'Image (copier l\'url depuis fb)', nb:'Numéro', rdv:'RDV', location:'Direction', petit:'Distance 9km/h', long:'Distance 11km/h' }"
+                            v-for="(attributeName, attr) in {nb:'Numéro', rdv:'RDV', location:'Direction', petit:'Distance 9km/h', long:'Distance 11km/h' }"
                         >
                             <label class="block mb-2 text-sm font-medium text-gray-900">{{attributeName}}</label>
                             <input
@@ -37,10 +67,10 @@
                         <div>
                             <div
                                 @click="copyClipboard"
-                                class="cursor-pointer overflow-hidden p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
-                            >
-                                <pre class="font-sans">{{text}}</pre>
-                            </div>
+                                class="cursor-pointer font-sans overflow-hidden p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
+                                v-html="htmlText"
+                            ></div>
+
                             <button
                                 @click="copyClipboard"
                                 type="button"
@@ -79,7 +109,7 @@
 
             <!-- RENDER -->
             <div id="render" class="hidden relative w-[1200px] h-[630px]">
-                <div class="w-full h-full bg-cover bg-center scale-110" :class="'bg-[url(\''+ data.image +'\')]'"></div>
+                <div class="w-full h-full bg-cover bg-center scale-110" :class="'bg-[url(\''+ imageURL +'\')]'"></div>
                 <div class="absolute bottom-5 left-5 text-4xl text-red-600 font-semibold uppercase">RDV {{data.rdv}}</div>
                 <div class="absolute left-5 top-5 -rotate-[15deg] flex flex-col items-center justify-center gap-2">
                     <div class="text-red-600 text-6xl font-bold font-serif">NightRun</div>
@@ -123,7 +153,8 @@
                         petit: new Date().getDay() == 4 ? "9" : "5",
                         long: new Date().getDay() == 4 ? "11" : "7",
                         location: "Parc Méric",
-                        image: "https://scontent-mrs2-2.xx.fbcdn.net/v/t39.30808-6/337697515_6007725255962270_3105285649272896230_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=-lyeM4ZvjhIAX_vkUpN&_nc_ht=scontent-mrs2-2.xx&oh=00_AfDFKUeccBfIxAvktWcsNyKUFv9QO_IC-m4eoY2CEdDi-w&oe=64282130",
+                        image: "https://media.istockphoto.com/id/1154557075/fr/photo/grand-groupe-de-gens-athl%C3%A9tiques-heureux-traversant-la-nature.jpg?s=170667a&w=0&k=20&c=I4uorxONGFZ7KlXIizBuUL2eTTRmZ6w3EjS8l_S4hw8=",
+                        imgFile: null,
                     },
                     blob: null,
                     timeout: null,
@@ -169,6 +200,11 @@
                             })
                         })
                     },
+                    changeImage(e) {
+                        const file = e.target.files[0]
+                        if (!file) return
+                        this.$set(this.data, "imgFile", URL.createObjectURL(file))
+                    },
                 },
                 computed: {
                     distances() {
@@ -188,6 +224,13 @@
                         }\n${this.data.frontale ? "Pensez à prendre votre frontale🔦🔦\n" : ""}${
                             this.data.eau ? "Pensez à prendre de l'eau 💧\n" : ""
                         }À ce soir,\nL'équipe NightRun Montpellier\n#nightrun #montpellier #running`
+                    },
+                    htmlText() {
+                        return this.text.replaceAll("\n", "<br/>")
+                    },
+                    imageURL() {
+                        if (this.data.imgFile) return this.data.imgFile
+                        if (this.data.image) return this.data.image
                     },
                 },
                 mounted() {
