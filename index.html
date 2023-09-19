@@ -110,10 +110,12 @@
             <!-- RENDER -->
             <div id="render" class="hidden relative w-[1200px] h-[630px]">
                 <div class="w-full h-full bg-cover bg-center scale-110" :class="'bg-[url(\''+ data.image +'\')]'"></div>
-                <div class="absolute bottom-5 left-5 text-4xl text-red-600 font-semibold uppercase">RDV {{data.rdv}}</div>
-                <div class="absolute left-5 top-5 -rotate-[15deg] flex flex-col items-center justify-center gap-2">
-                    <div class="text-red-600 text-6xl font-bold font-serif">NightRun</div>
-                    <div class="mt-10 text-white bg-red-600/80 rounded-xl px-10 py-2 text-3xl font-black">
+                <div class="absolute bottom-5 left-5 text-3xl rounded-lg px-5 py-2.5 font-semibold uppercase bg-red-600/75 text-white">
+                    <div class="-translate-y-4">RDV {{data.rdv}}</div>
+                </div>
+                <div class="absolute left-5 top-0 -rotate-[10deg] flex flex-col items-center justify-center gap-2">
+                    <div class="text-red-600 text-7xl font-bold font-serif shadow-xl">NightRun</div>
+                    <div class="mt-10 text-white bg-red-600/80 rounded-xl px-5 py-2 text-3xl font-black">
                         <div class="-translate-y-3">#{{data.nb}}</div>
                     </div>
                 </div>
