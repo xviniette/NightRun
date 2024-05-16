@@ -15,10 +15,7 @@
                         <div>
                             <label class="block mb-2 text-sm font-medium">Image</label>
                             <div class="flex gap-2">
-                                <input
-                                    v-model="data.image"
-                                    class="block p-2.5 w-full text-sm bg-transparent rounded-lg border border-gray-300"
-                                />
+                                <input v-model="data.image" class="block p-2.5 w-full text-sm bg-transparent rounded-lg border border-gray-300" />
                                 <label
                                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                 >
@@ -46,18 +43,18 @@
                             v-for="(attributeName, attr) in {nb:'Numéro', rdv:'RDV', location:'Direction', petit:'Distance 9km/h', long:'Distance 11km/h' }"
                         >
                             <label class="block mb-2 text-sm font-medium">{{attributeName}}</label>
-                            <input
-                                v-model="data[attr]"
-                                class="block p-2.5 w-full text-sm bg-transparent rounded-lg border border-gray-300"
-                            />
+                            <input v-model="data[attr]" class="block p-2.5 w-full text-sm bg-transparent rounded-lg border border-gray-300" />
                         </div>
 
-                        <div class="flex items-center" v-for="(attributeName, attr) in {
+                        <div
+                            class="flex items-center"
+                            v-for="(attributeName, attr) in {
                             fractionne:'Fractionné',
                             frontale:'Frontale',
                             eau:'Eau',
                             arrivee:'Arrivée'
-                        }">
+                        }"
+                        >
                             <input
                                 :id="attr"
                                 v-model="data[attr]"
@@ -222,16 +219,21 @@
                         this.$set(this.data, "image", URL.createObjectURL(file))
                     },
                     getFacebookInfos() {
-                        fetch(`https://corsproxy.io/?${encodeURIComponent("https://rss.app/feeds/v1.1/r0wMbSYnDVP40f1W.json")}`)
-                            .then(res => res.json())
+                        fetch(
+                            `https://corsproxy.io/?${encodeURIComponent(
+                                "https://fetchrss.com/rss/66466f93cafc4c36e65e450266466f45db49b672af43eea2.xml"
+                            )}`
+                        )
+                            .then(res => res.text())
                             .then(data => {
-                                let last = data.items[0]
+                                const xml = new DOMParser().parseFromString(data, "application/xml")
 
-                                this.data.image = last.image
+                                const lastPost = xml.firstChild.getElementsByTagName("item")[0]
 
-                                const matchs = /#(\d+)/gm.exec(last.content_text)
+                                const matchs = /#(\d+)/gm.exec(lastPost.textContent)
+                                if (matchs[1]) this.data.nb = this.$set(this.data, "nb", matchs[1] * 1 + 1)
 
-                                if (matchs[1]) this.data.nb = matchs[1] * 1 + 1
+                                this.$set(this.data, "image", lastPost.getElementsByTagName("media:content")[0].getAttribute("url"))
                             })
                     },
                 },
@@ -248,10 +250,11 @@
                             this.data.rdv
                         }.\n\nNous irons en direction de ${this.data.location}\n\nAu programme ce soir :\n${
                             this.data.petit.length > 0 ? `📍 ${this.data.fractionne ? "Footing" : "Un run"} de ${this.data.petit}km à 9km/h 🏃‍♀️\n` : ""
-                        }${this.data.long.length > 0 ? `📍 ${this.data.fractionne ? "Footing" : "Un run"} de ${this.data.long}km à 11km/h 🏃‍♀️\n` : ""}${
-                            this.data.fractionne ? "Suivi d'une séance de fractionné\n" : ""
-                        }\n${this.data.arrivee ? `La séance se terminera ${this.data.arriveeText}.\n\n` : ""}${
-                            this.data.frontale ? "Pensez à prendre votre lampe frontale 🔦\n" : ""}${
+                        }${
+                            this.data.long.length > 0 ? `📍 ${this.data.fractionne ? "Footing" : "Un run"} de ${this.data.long}km à 11km/h 🏃‍♀️\n` : ""
+                        }${this.data.fractionne ? "Suivi d'une séance de fractionné\n" : ""}\n${
+                            this.data.arrivee ? `La séance se terminera ${this.data.arriveeText}.\n\n` : ""
+                        }${this.data.frontale ? "Pensez à prendre votre lampe frontale 🔦\n" : ""}${
                             this.data.eau ? "Pensez à prendre de l'eau 💧\n" : ""
                         }À ce soir,\nL'équipe Night Run Montpellier\n#nightrun #montpellier #running`
                     },
@@ -260,7 +263,6 @@
                     },
                 },
                 mounted() {
-                    setTimeout(() => this.render(), 100)
                     this.getFacebookInfos()
                 },
                 watch: {
@@ -272,9 +274,9 @@
                         },
                         deep: true,
                     },
-                    'data.fractionne': function (newValue) {
+                    "data.fractionne": function (newValue) {
                         this.data.arrivee = newValue
-                    }
+                    },
                 },
             })
         </script>
