@@ -206,6 +206,19 @@
                         if (!file) return
                         this.$set(this.data, "image", URL.createObjectURL(file))
                     },
+                    getFacebookInfos() {
+                        fetch(`https://corsproxy.io/?${encodeURIComponent("https://rss.app/feeds/v1.1/r0wMbSYnDVP40f1W.json")}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                let last = data.items[0]
+
+                                this.data.image = last.image
+
+                                const matchs = /#(\d+)/gm.exec(last.content_text)
+
+                                if (matchs[1]) this.data.nb = matchs[1] * 1 + 1
+                            })
+                    },
                 },
                 computed: {
                     distances() {
@@ -232,6 +245,7 @@
                 },
                 mounted() {
                     setTimeout(() => this.render(), 100)
+                    this.getFacebookInfos()
                 },
                 watch: {
                     data: {
