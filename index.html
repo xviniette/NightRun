@@ -228,10 +228,22 @@
                             .then(data => {
                                 const xml = new DOMParser().parseFromString(data, "application/xml")
 
-                                const lastPost = xml.firstChild.getElementsByTagName("item")[0]
+                                const posts = xml.firstChild.getElementsByTagName("item")
+
+                                console.log(posts)
+
+                                const lastPost = posts[0]
+
+                                for (let post of posts) {
+                                    const matchs = /#(\d+)/gm.exec(post.textContent)
+                                    if (matchs && matchs[1]) {
+                                        this.data.nb = this.$set(this.data, "nb", matchs[1] * 1 + 1)
+                                        break
+                                    }
+                                }
 
                                 const matchs = /#(\d+)/gm.exec(lastPost.textContent)
-                                if (matchs[1]) this.data.nb = this.$set(this.data, "nb", matchs[1] * 1 + 1)
+                                if (matchs && matchs[1]) this.data.nb = this.$set(this.data, "nb", matchs[1] * 1 + 1)
 
                                 this.$set(this.data, "image", lastPost.getElementsByTagName("media:content")[0].getAttribute("url"))
                             })
