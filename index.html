@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -221,7 +222,7 @@
                     getFacebookInfos() {
                         fetch(
                             `https://corsproxy.io/?${encodeURIComponent(
-                                "https://fetchrss.com/rss/6655cdec7363e267461dc3336655cdd7ff8bfb10505b8402.xml"
+                                "https://fetchrss.com/rss/66f278a87f8c13f92607d86366f2786649e411265a051f12.xml"
                             )}`
                         )
                             .then(res => res.text())
@@ -230,7 +231,7 @@
 
                                 const posts = xml.firstChild.getElementsByTagName("item")
 
-                                console.log(posts)
+                                // console.log(posts)
 
                                 const lastPost = posts[0]
 
