@@ -221,9 +221,7 @@
                     },
                     getFacebookInfos() {
                         fetch(
-                            `https://corsproxy.io/?${encodeURIComponent(
-                                "https://fetchrss.com/rss/6776637ca504913bb60fdc5267766315438c5f25010deac3.xml"
-                            )}`
+                            `https://cors.smooth.video/https://fetchrss.com/rss/6776637ca504913bb60fdc5267766315438c5f25010deac3.xml`
                         )
                             .then(res => res.text())
                             .then(data => {
