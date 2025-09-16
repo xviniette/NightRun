@@ -11,7 +11,7 @@
         <div id="app">
             <div class="container mx-auto">
                 <h1 class="text-center text-4xl font-bold mb-4">Night Run Post</h1>
-                <div class="flex flex-col lg:flex-inline gap-4">
+                <div class="flex flex-col lg:flex-inline gap-4 px-1">
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block mb-2 text-sm font-medium">Image</label>
@@ -49,6 +49,7 @@
 
                         <div
                             class="flex items-center"
+                            :class="attr === 'arrivee' ? 'col-span-2 sm:col-span-1' : ''"
                             v-for="(attributeName, attr) in {
                             fractionne:'Fractionné',
                             frontale:'Frontale',
@@ -286,8 +287,15 @@
                         },
                         deep: true,
                     },
-                    "data.fractionne": function (newValue) {
-                        this.data.arrivee = newValue
+                    "data.fractionne": function (isFractionne) {
+                        this.data.arrivee = isFractionne
+                        if (isFractionne) {
+                            this.data.petit = "3"
+                            this.data.long = "4"
+                        } else {
+                            this.data.petit = new Date().getDay() == 4 ? "9" : "5"
+                            this.data.long = new Date().getDay() == 4 ? "11" : "7"
+                        }
                     },
                 },
             })
