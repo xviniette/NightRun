@@ -221,9 +221,7 @@
                         this.$set(this.data, "image", URL.createObjectURL(file))
                     },
                     getFacebookInfos() {
-                        fetch(
-                            `https://cors.smooth.video/https://fetchrss.com/feed/aH-iHWobLfgyaH-iKXEKrYIy.rss`
-                        )
+                        fetch('https://night-run-proxy.tcastanie.dev/rss')
                             .then(res => res.text())
                             .then(data => {
                                 const xml = new DOMParser().parseFromString(data, "application/xml")
